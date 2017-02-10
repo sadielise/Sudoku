@@ -1,6 +1,6 @@
-'''
-Created on Jan 18, 2017
+from Puzzle import SudokuPuzzle
 
-@author: Sadie
-'''
-print "hello!"
+puzzle = SudokuPuzzle('puzzle1.txt')
+puzzle.printNumbers()
+puzzle.printBooleans()
+puzzle.printOptions()
