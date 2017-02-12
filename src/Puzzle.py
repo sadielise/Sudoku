@@ -3,20 +3,24 @@ import numpy as np
 
 class SudokuPuzzle(object):
     
+    """setup number and boolean arrays"""
     def __init__(self, fileName):
         self.numbers = self.initNumbers(fileName)
         self.booleans = self.initBooleans()
         self.setBooleans()
-        
-    def initNumbers(self, fileName):
+    
+    """load values from file into numbers array"""    
+    def initNumbers(self, fileName): 
         nums = np.loadtxt(fileName, 'int16')
         return nums
     
-    def initBooleans(self):
+    """set all values in boolean array to 1"""
+    def initBooleans(self): 
         bools = np.ones((9,9,10), np.int16)
         return bools
     
-    def setBooleans(self):
+    """set first index to zero for unknown values, otherwise place val"""
+    def setBooleans(self): 
         for row in range(9):
             for col in range(9):
                 if self.numbers[row, col] == 0:
@@ -25,27 +29,29 @@ class SudokuPuzzle(object):
         for row in range(9):
             for col in range(9):
                 if self.numbers[row, col] != 0:
-                    self.setOptions(row, col, self.numbers[row, col])
-                    self.wipeOutRow(row, self.numbers[row, col])
-                    self.wipeOutColumn(col, self.numbers[row, col])
-                    self.wipeOutBox(row, col, self.numbers[row, col])
+                    self.placeValue(row, col, self.numbers[row, col])
     
-    def setOptions(self, row, col, val):
+    """change all indices > 0 to 0 except for value"""
+    def setOptions(self, row, col, val): 
+        self.booleans[row, col, 0] = 1
         for x in range(9):
             if (x + 1) != val:
                 self.booleans[row, col, (x + 1)] = 0
     
-    def wipeOutRow(self, row, val):
+    """set index of val to 0 for all cells in row"""
+    def wipeOutRow(self, row, val): 
         for col in range(9):
             if(self.booleans[row, col, 0] == 0):
                 self.booleans[row, col, val] = 0
     
-    def wipeOutColumn(self, col, val):
+    """set index of val to 0 for all cells in column"""
+    def wipeOutColumn(self, col, val): 
         for row in range(9):
             if(self.booleans[row, col, 0] == 0):
                 self.booleans[row, col, val] = 0
     
-    def wipeOutBox(self, row, col, val):
+    """set index of val to 0 for all cells in box"""
+    def wipeOutBox(self, row, col, val): 
         startRow, startCol = self.getBoxCoordinates(row, col)
         rowCount = startRow
         colCount = startCol
@@ -56,7 +62,8 @@ class SudokuPuzzle(object):
                 colCount = colCount + 1
             colCount = startCol
             rowCount = rowCount + 1
-                
+    
+    """return box number for given coordinates"""            
     def getBoxCoordinates(self, row, col):
         if row < 3 and col < 3:
             return 0, 0
@@ -76,7 +83,34 @@ class SudokuPuzzle(object):
             return 6, 3
         elif row > 5 and col > 5:
             return 6, 6
-            
+   
+    """place val in number array and wipe out row, column, and box in boolean array"""
+    def placeValue(self, row, col, val):
+        self.numbers[row, col] = val
+        self.setOptions(row, col, self.numbers[row, col])
+        self.wipeOutRow(row, self.numbers[row, col])
+        self.wipeOutColumn(col, self.numbers[row, col])
+        self.wipeOutBox(row, col, self.numbers[row, col])
+        
+    """find cell in booleans that only has one option left"""
+    def findCellWithOneOption(self):
+        for row in range(9):
+            for col in range(9):
+                if self.booleans[row, col, 0] == 0:
+                    cellCount = 1
+                    oneCount = 0
+                    oneIndex = 0
+                    for x in range(9):
+                        if self.booleans[row, col, cellCount] == 1:
+                            oneIndex = cellCount
+                            oneCount = oneCount + 1
+                        cellCount = cellCount + 1
+                    if oneCount == 1:
+                        self.placeValue(row, col, oneIndex)
+                        return True
+        return False
+        
+    """print numbers array"""        
     def printNumbers(self):
         colCount = 0
         boxCount = 0
@@ -101,6 +135,7 @@ class SudokuPuzzle(object):
                 colCount = colCount + 1
         print("---------------------\n")
         
+    """print first index of boolean array"""
     def printBooleans(self):
         colCount = 0
         boxCount = 0
@@ -125,7 +160,8 @@ class SudokuPuzzle(object):
                     stdout.write(" ")
                     colCount = colCount + 1
         print("---------------------\n")
-        
+       
+    """print entire boolean array"""
     def printOptions(self):
         rowCount = 0
         colCount = 0
@@ -190,8 +226,3 @@ class SudokuPuzzle(object):
         print("---------------------------------------------------------------------\n")
         
         
-puzzle = SudokuPuzzle('puzzle1.txt')
-puzzle.printNumbers()
-puzzle.printOptions()
-
-
