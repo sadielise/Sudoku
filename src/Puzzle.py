@@ -1,5 +1,6 @@
 from sys import stdout
 import numpy as np
+from astropy.wcs.docstrings import row
 
 class SudokuPuzzle(object):
     
@@ -21,15 +22,13 @@ class SudokuPuzzle(object):
     
     """set first index to zero for unknown values, otherwise place val"""
     def setBooleans(self): 
-        for row in range(9):
-            for col in range(9):
-                if self.numbers[row, col] == 0:
-                    self.booleans[row, col, 0] = 0
+        for cell in PuzzleIter():
+            if self.numbers[cell[0], cell[1]] == 0:
+                self.booleans[cell[0], cell[1], 0] = 0
         
-        for row in range(9):
-            for col in range(9):
-                if self.numbers[row, col] != 0:
-                    self.placeValue(row, col, self.numbers[row, col])
+        for cell in PuzzleIter():
+            if self.numbers[cell[0], cell[1]] != 0:
+                self.placeValue(cell[0], cell[1], self.numbers[cell[0], cell[1]])
     
     """change all indices > 0 to 0 except for value"""
     def setOptions(self, row, col, val): 
@@ -40,50 +39,57 @@ class SudokuPuzzle(object):
     
     """set index of val to 0 for all cells in row"""
     def wipeOutRow(self, row, val): 
-        for col in range(9):
-            if(self.booleans[row, col, 0] == 0):
-                self.booleans[row, col, val] = 0
+        for cell in RowIter(row):
+            if(self.booleans[cell[0], cell[1], 0] == 0):
+                self.booleans[cell[0], cell[1], val] = 0
     
     """set index of val to 0 for all cells in column"""
     def wipeOutColumn(self, col, val): 
-        for row in range(9):
-            if(self.booleans[row, col, 0] == 0):
-                self.booleans[row, col, val] = 0
+        for cell in ColumnIter(col):
+            if(self.booleans[cell[0], cell[1], 0] == 0):
+                self.booleans[cell[0], cell[1], val] = 0
     
     """set index of val to 0 for all cells in box"""
     def wipeOutBox(self, row, col, val): 
-        startRow, startCol = self.getBoxCoordinates(row, col)
-        rowCount = startRow
-        colCount = startCol
-        for x in range(3):
-            for y in range(3):
-                if(self.booleans[rowCount, colCount, 0] == 0):
-                    self.booleans[rowCount, colCount, val] = 0
-                colCount = colCount + 1
-            colCount = startCol
-            rowCount = rowCount + 1
+        for cell in BoxIter(row, col):
+                if(self.booleans[cell[0], cell[1], 0] == 0):
+                    self.booleans[cell[0], cell[1], val] = 0
     
-    """return box number for given coordinates"""            
-    def getBoxCoordinates(self, row, col):
-        if row < 3 and col < 3:
-            return 0, 0
-        elif row < 3 and col > 2 and col < 6:
-            return 0, 3
-        elif row < 3 and col > 5:
-            return 0, 6
-        elif row > 2 and row < 6 and col < 3:
-            return 3, 0
-        elif row > 2 and row < 6 and col > 2 and col < 6:
-            return 3, 3
-        elif row > 2 and row < 6 and col < 9:
-            return 3, 6
-        elif row > 5 and col < 3:
-            return 6, 0
-        elif row > 5 and col > 2 and col < 6:
-            return 6, 3
-        elif row > 5 and col > 5:
-            return 6, 6
-   
+    """count how many times an option shows up in a row"""
+    def countOptionsInRow(self, row, val): 
+        count = 0
+        col = 0
+        for cell in RowIter(row):
+            if(self.booleans[cell[0], cell[1], 0] == 0):
+                if(self.booleans[cell[0], cell[1], val] == 1):
+                    count = count + 1
+                    col = cell[1]
+        return count, row, col
+    
+    """count how many times an option shows up in a column"""
+    def countOptionsInColumn(self, col, val): 
+        count = 0
+        row = 0
+        for cell in ColumnIter(col):
+            if(self.booleans[cell[0], cell[1], 0] == 0):
+                if(self.booleans[cell[0],cell[1], val] == 1):
+                    count = count + 1
+                    row = cell[0]
+        return count, row, col
+        
+    """count how many times an options shows up in a box"""
+    def countOptionsInBox(self, row, col, val): 
+        count = 0
+        retRow = 0
+        retCol = 0
+        for cell in BoxIter(row, col):
+            if(self.booleans[cell[0], cell[1], 0] == 0):
+                if(self.booleans[cell[0],cell[1], val] == 1):
+                    count = count + 1
+                    retRow = cell[0]
+                    retCol = cell[1]
+        return count, retRow, retCol
+    
     """place val in number array and wipe out row, column, and box in boolean array"""
     def placeValue(self, row, col, val):
         self.numbers[row, col] = val
@@ -92,23 +98,11 @@ class SudokuPuzzle(object):
         self.wipeOutColumn(col, self.numbers[row, col])
         self.wipeOutBox(row, col, self.numbers[row, col])
         
-    """find cell in booleans that only has one option left"""
-    def findCellWithOneOption(self):
-        for row in range(9):
-            for col in range(9):
-                if self.booleans[row, col, 0] == 0:
-                    cellCount = 1
-                    oneCount = 0
-                    oneIndex = 0
-                    for x in range(9):
-                        if self.booleans[row, col, cellCount] == 1:
-                            oneIndex = cellCount
-                            oneCount = oneCount + 1
-                        cellCount = cellCount + 1
-                    if oneCount == 1:
-                        self.placeValue(row, col, oneIndex)
-                        return True
-        return False
+    def isSolved(self):
+        for cell in PuzzleIter():
+            if self.booleans[cell[0], cell[1], 0] == 0:
+                return False
+        return True 
         
     """print numbers array"""        
     def printNumbers(self):
@@ -224,5 +218,92 @@ class SudokuPuzzle(object):
             rowCount = rowCount + 1
         
         print("---------------------------------------------------------------------\n")
+
+
+class BoxIter:
+    def __init__(self, row, col):
+        self.row, self.col = getBoxCoordinates(row, col)
+        self.startRow = self.row
+        self.startCol = self.col
+    
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        if not(self.row == (self.startRow + 2) and self.col == (self.startCol + 3)):
+            if self.col == (self.startCol + 3):
+                self.col = self.startCol
+                self.row = self.row + 1
+            self.col = self.col + 1
+            return (self.row), (self.col - 1)
+        else:
+            raise StopIteration
         
+class RowIter:
+    def __init__(self, row):
+        self.row = row
+        self.col = 0
+    
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        if self.col < 9:
+            self.col = self.col + 1
+            return self.row, (self.col - 1)
+        else:
+            raise StopIteration
         
+class ColumnIter:
+    def __init__(self, col):
+        self.row = 0
+        self.col = col
+        
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        if self.row < 9:
+            self.row = self.row + 1
+            return (self.row - 1), self.col
+        else:
+            raise StopIteration
+        
+class PuzzleIter:
+    def __init__(self):
+        self.row = 0
+        self.col = 0
+    
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        if not(self.row == 8 and self.col == 9):
+            self.col = self.col + 1
+            if self.col == 10:
+                self.col = 1
+                self.row = self.row + 1
+            return self.row, (self.col - 1)
+        else:
+            raise StopIteration
+        
+"""return box number for given coordinates"""            
+def getBoxCoordinates(row, col):
+    if row < 3 and col < 3:
+        return 0, 0
+    elif row < 3 and col > 2 and col < 6:
+        return 0, 3
+    elif row < 3 and col > 5:
+        return 0, 6
+    elif row > 2 and row < 6 and col < 3:
+        return 3, 0
+    elif row > 2 and row < 6 and col > 2 and col < 6:
+        return 3, 3
+    elif row > 2 and row < 6 and col < 9:
+        return 3, 6
+    elif row > 5 and col < 3:
+        return 6, 0
+    elif row > 5 and col > 2 and col < 6:
+        return 6, 3
+    elif row > 5 and col > 5:
+        return 6, 6
