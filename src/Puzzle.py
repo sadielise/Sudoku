@@ -1,6 +1,5 @@
 from sys import stdout
 import numpy as np
-from astropy.wcs.docstrings import row
 
 class SudokuPuzzle(object):
     

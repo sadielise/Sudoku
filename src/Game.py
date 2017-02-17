@@ -14,8 +14,9 @@ def solveOneChoice(puzzle):
             oneCount = 0
             oneIndex = 0
             for x in range(9):
-                if puzzle.booleans[cell[0], cell[1], (x+1)] == 1:
-                    oneIndex = x + 1
+                val = x + 1
+                if puzzle.booleans[cell[0], cell[1], val] == 1:
+                    oneIndex = val
                     oneCount = oneCount + 1
             if oneCount == 1:
                 puzzle.placeValue(cell[0], cell[1], oneIndex)
@@ -35,7 +36,6 @@ def solveElimination(puzzle):
     for col in range(9):
         for val in range(9):
             count, retRow, retCol = puzzle.countOptionsInColumn(col, (val+1))
-            print("count ", count)
             if count == 1:
                 puzzle.placeValue(retRow, retCol, (val+1))
                 changeMade = True
@@ -45,12 +45,12 @@ def solveElimination(puzzle):
             count, retRow, retCol = puzzle.countOptionsInColumn(box, (val+1))
             if count == 1:
                 puzzle.placeValue(retRow, retCol, (val+1))
-                changeMade = True 
+                changeMade = True
     
     return changeMade
 
 """initialize puzzle"""
-puzzle = SudokuPuzzle('puzzle4.txt')
+puzzle = SudokuPuzzle('puzzle27.txt')
 puzzle.printNumbers()
 puzzle.printOptions()
 
@@ -59,6 +59,7 @@ while True:
     
     isSolved = False
     
+    print("moving to one choice")
     oneChoiceWorked = True
     while oneChoiceWorked == True and isSolved == False:
         oneChoiceWorked = solveOneChoice(puzzle)
@@ -66,8 +67,9 @@ while True:
         isSolved = puzzle.isSolved()
         if isSolved == True:
             sys.exit(1)
-        
+            
     puzzle.printOptions()
+        
     
     print("moving to elimination")
     eliminationWorked = True
@@ -77,4 +79,6 @@ while True:
         isSolved = puzzle.isSolved()
         if isSolved == True:
             sys.exit(1)
+        
+    puzzle.printOptions()    
         
