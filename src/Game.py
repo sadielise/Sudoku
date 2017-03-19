@@ -52,7 +52,7 @@ def solveSubsets(puzzle, num):
     changeMade = False
     
     for row in range(9):
-        
+        """get row/column/options for all cells in row with number of options = num"""
         strings = []
         for cell1 in RowIter(row):
             tempString = ""
@@ -66,13 +66,14 @@ def solveSubsets(puzzle, num):
                     index += 1
                 if len(tempString) == num + 2:
                     strings.append(tempString)
-            
+                    
+        """find all strings w/ matching options and put into temp array"""
         finalStrings = []
-        tempStrings = []
         stringsLen = len(strings)
         if(stringsLen >= num):
             for j in range(stringsLen - 1):
                 k = j + 1
+                tempStrings = []
                 while k < stringsLen:
                     if strings[j][2:] == strings[k][2:]:
                         if strings[j] not in tempStrings:
@@ -80,11 +81,13 @@ def solveSubsets(puzzle, num):
                         if strings[k] not in tempStrings:
                             tempStrings.append(strings[k])
                     k += 1
-                if len(tempStrings) == 4:
-                    for temp in tempStrings:
-                        if temp not in finalStrings:
-                            finalStrings.append(temp)
+            
+                if len(tempStrings) == num:
+                    for tempStr in tempStrings:
+                        if tempStr not in finalStrings:
+                            finalStrings.append(tempStr)
 
+        """for cells not chosen, remove chosen cell options from their options"""
         finalStringsLen = len(finalStrings)
         if(finalStringsLen >= num):    
             for cell2 in RowIter(row):
@@ -99,12 +102,11 @@ def solveSubsets(puzzle, num):
                             if puzzle.booleans[cell2[0], cell2[1], int(s2[index])] != 0:
                                 puzzle.booleans[cell2[0], cell2[1], int(s2[index])] = 0
                                 changeMade = True
-                                print("row change made")
                             index += 1
-                        
     
     for col in range(9):
-        
+
+        """get row/column/options for all cells in column with number of options = num"""
         strings = []
         for cell1 in ColumnIter(col):
             tempString = ""
@@ -118,14 +120,15 @@ def solveSubsets(puzzle, num):
                     index += 1
                 if len(tempString) == num + 2:
                     strings.append(tempString)
-                    print("adding string " + tempString)
-            
+
+                    
+        """find all strings w/ matching options and put into temp array"""
         finalStrings = []
-        tempStrings = []
         stringsLen = len(strings)
         if(stringsLen >= num):
             for j in range(stringsLen - 1):
                 k = j + 1
+                tempStrings = []
                 while k < stringsLen:
                     if strings[j][2:] == strings[k][2:]:
                         if strings[j] not in tempStrings:
@@ -133,11 +136,13 @@ def solveSubsets(puzzle, num):
                         if strings[k] not in tempStrings:
                             tempStrings.append(strings[k])
                     k += 1
-                if len(tempStrings) == 4:
-                    for temp in tempStrings:
-                        if temp not in finalStrings:
-                            finalStrings.append(temp)
+            
+                if len(tempStrings) == num:
+                    for tempStr in tempStrings:
+                        if tempStr not in finalStrings:
+                            finalStrings.append(tempStr)
 
+        """for cells not chosen, remove chosen cell options from their options"""
         finalStringsLen = len(finalStrings)
         if(finalStringsLen >= num):
             for cell2 in ColumnIter(col):
@@ -152,14 +157,14 @@ def solveSubsets(puzzle, num):
                             if puzzle.booleans[cell2[0], cell2[1], int(s2[index])] != 0:
                                 puzzle.booleans[cell2[0], cell2[1], int(s2[index])] = 0
                                 changeMade = True
-                                print("col change made")
                             index += 1
  
-        
+    """get row/column/options for all cells in box with number of options = num"""    
     boxRow = 0
     boxCol = 0
     while boxRow < 9:
         while boxCol < 9:
+
             strings = []
             for cell1 in BoxIter(boxRow, boxCol):
                 tempString = ""
@@ -174,12 +179,13 @@ def solveSubsets(puzzle, num):
                     if len(tempString) == num + 2:
                         strings.append(tempString)
             
+            """find all strings w/ matching options and put into temp array"""
             finalStrings = []
-            tempStrings = []
             stringsLen = len(strings)
             if(stringsLen >= num):
                 for j in range(stringsLen - 1):
                     k = j + 1
+                    tempStrings = []
                     while k < stringsLen:
                         if strings[j][2:] == strings[k][2:]:
                             if strings[j] not in tempStrings:
@@ -187,11 +193,13 @@ def solveSubsets(puzzle, num):
                             if strings[k] not in tempStrings:
                                 tempStrings.append(strings[k])
                         k += 1
-                    if len(tempStrings) == 4:
-                        for temp in tempStrings:
-                            if temp not in finalStrings:
-                                finalStrings.append(temp)
+                
+                    if len(tempStrings) == num:
+                        for tempStr in tempStrings:
+                            if tempStr not in finalStrings:
+                                finalStrings.append(tempStr)
         
+            """for cells not chosen, remove chosen cell options from their options"""
             finalStringsLen = len(finalStrings)
             if(finalStringsLen >= num):
                 for cell2 in BoxIter(boxRow, boxCol):
@@ -206,7 +214,6 @@ def solveSubsets(puzzle, num):
                                 if puzzle.booleans[cell2[0], cell2[1], int(s2[index])] != 0:
                                     puzzle.booleans[cell2[0], cell2[1], int(s2[index])] = 0
                                     changeMade = True
-                                    print("box change made")
                                 index += 1
         
             boxCol += 3
@@ -215,7 +222,7 @@ def solveSubsets(puzzle, num):
     return changeMade
 
 """initialize puzzle"""
-puzzle = SudokuPuzzle('puzzle38.txt')
+puzzle = SudokuPuzzle('puzzle49.txt')
 puzzle.printNumbers()
 puzzle.printOptions()
 
@@ -223,6 +230,8 @@ puzzle.printOptions()
 while True:
     
     isSolved = False
+    verbose = False
+    numChanges = 0
     
     print("moving to one choice")
     oneChoiceWorked = True
@@ -232,7 +241,10 @@ while True:
         isSolved = puzzle.isSolved()
         if isSolved == True:
             sys.exit(1)
-    puzzle.printOptions()
+        if oneChoiceWorked == True:
+            numChanges +=1
+    if verbose == True:
+        puzzle.printOptions()
         
     
     print("moving to elimination")
@@ -243,38 +255,66 @@ while True:
         isSolved = puzzle.isSolved()
         if isSolved == True:
             sys.exit(1)
-    puzzle.printOptions()
+        if eliminationWorked == True:
+            numChanges += 1
+    if verbose == True:
+        puzzle.printOptions()
     
     
     print("moving to subsets of size 2")
-    subsetsWorked = True
-    while subsetsWorked == True and isSolved == False:
-        subsetsWorked = solveSubsets(puzzle, 2) 
+    subsets2Worked = True
+    while subsets2Worked == True and isSolved == False:
+        subsets2Worked = solveSubsets(puzzle, 2) 
         puzzle.printNumbers()
         isSolved = puzzle.isSolved()
         if isSolved == True:
             sys.exit(1)
-    puzzle.printOptions()
+        if subsets2Worked == True:
+            numChanges += 1
+    if verbose == True:
+        puzzle.printOptions()
     
     
     print("moving to subsets of size 3")
-    subsetsWorked = True
-    while subsetsWorked == True and isSolved == False:
-        subsetsWorked = solveSubsets(puzzle, 3) 
+    subsets3Worked = True
+    while subsets3Worked == True and isSolved == False:
+        subsets3Worked = solveSubsets(puzzle, 3) 
         puzzle.printNumbers()
         isSolved = puzzle.isSolved()
         if isSolved == True:
             sys.exit(1)
-    puzzle.printOptions()
+        if subsets3Worked == True:
+            numChanges += 1
+    if verbose == True:
+        puzzle.printOptions()
             
             
     print("moving to subsets of size 4")
-    subsetsWorked = True
-    while subsetsWorked == True and isSolved == False:
-        subsetsWorked = solveSubsets(puzzle, 4) 
+    subsets4Worked = True
+    while subsets4Worked == True and isSolved == False:
+        subsets4Worked = solveSubsets(puzzle, 4) 
         puzzle.printNumbers()
         isSolved = puzzle.isSolved()
         if isSolved == True:
-            sys.exit(1)            
+            sys.exit(1)
+        if subsets4Worked == True:
+            numChanges += 1            
     puzzle.printOptions()  
         
+    
+    print("moving to subsets of size 5")
+    subsets5Worked = True
+    while subsets5Worked == True and isSolved == False:
+        subsets5Worked = solveSubsets(puzzle, 5) 
+        puzzle.printNumbers()
+        isSolved = puzzle.isSolved()
+        if isSolved == True:
+            sys.exit(1)   
+        if subsets5Worked == True:
+            numChanges += 1         
+    if verbose == True:
+        puzzle.printOptions()
+    
+    if numChanges == 0:
+        print("Puzzle cannot be solved")
+        sys.exit(1)
