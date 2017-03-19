@@ -52,7 +52,7 @@ class SudokuPuzzle(object):
     def wipeOutBox(self, row, col, val): 
         for cell in BoxIter(row, col):
                 if(self.booleans[cell[0], cell[1], 0] == 0):
-                    self.booleans[cell[0], cell[1], val] = 0
+                    self.booleans[cell[0], cell[1], val] = 0                
     
     """count how many times an option shows up in a row"""
     def countOptionsInRow(self, row, val): 
@@ -76,7 +76,7 @@ class SudokuPuzzle(object):
                     row = cell[0]
         return count, row, col
         
-    """count how many times an options shows up in a box"""
+    """count how many times an option shows up in a box"""
     def countOptionsInBox(self, row, col, val): 
         count = 0
         retRow = 0
@@ -88,6 +88,22 @@ class SudokuPuzzle(object):
                     retRow = cell[0]
                     retCol = cell[1]
         return count, retRow, retCol
+    
+    def getOptionsArrayRow(self, row, num):
+        strings = []
+        index = 0;
+        for col in range(9):
+            if self.booleans[row, col, 0] == 0:
+                options = str(row) + str(col)
+                val = 1
+                while val < 10:
+                    if self.booleans[row, col, val] == 1:
+                        options += str(val)
+                    val = val + 1
+                if len(options) == num + 2:
+                    strings[index] = options
+            index = index + 1
+        return strings                             
     
     """place val in number array and wipe out row, column, and box in boolean array"""
     def placeValue(self, row, col, val):
