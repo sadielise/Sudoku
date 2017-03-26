@@ -222,7 +222,7 @@ def solveSubsets(puzzle, num):
     return changeMade
 
 """initialize puzzle"""
-puzzle = SudokuPuzzle('puzzle49.txt')
+puzzle = SudokuPuzzle('puzzle38.txt')
 puzzle.printNumbers()
 puzzle.printOptions()
 
