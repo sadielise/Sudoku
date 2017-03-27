@@ -14,10 +14,18 @@ class SudokuPuzzle(object):
         nums = np.loadtxt(fileName, 'int16')
         return nums
     
+    """getter for numbers array"""
+    def getNumbers(self):
+        return self.numbers
+    
     """set all values in boolean array to 1"""
     def initBooleans(self): 
         bools = np.ones((9,9,10), np.int16)
         return bools
+    
+    """getter for booleans array"""
+    def getBooleans(self):
+        return self.booleans
     
     """set first index to zero for unknown values, otherwise place val"""
     def setBooleans(self): 
