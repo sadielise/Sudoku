@@ -3,12 +3,12 @@ from Puzzle import RowIter
 from Puzzle import ColumnIter
 from Puzzle import BoxIter
 from Puzzle import PuzzleIter
-import sys
+
 
 class SudokuGame(object):
     
-    def __init__(self, puzzleName):
-        self.puzzle = SudokuPuzzle(puzzleName)
+    def __init__(self, puzzle):
+        self.puzzle = puzzle
         
     def getPuzzle(self):
         return self.puzzle
@@ -249,7 +249,7 @@ class SudokuGame(object):
                 self.puzzle.printNumbers()
                 isSolved = self.puzzle.isSolved()
                 if isSolved == True:
-                    sys.exit(1)
+                    return 1
                 if oneChoiceWorked == True:
                     numChanges +=1
             if verbose == True:
@@ -262,7 +262,7 @@ class SudokuGame(object):
                 self.puzzle.printNumbers()
                 isSolved = self.puzzle.isSolved()
                 if isSolved == True:
-                    sys.exit(1)
+                    return 1
                 if eliminationWorked == True:
                     numChanges += 1
             if verbose == True:
@@ -275,7 +275,7 @@ class SudokuGame(object):
                 self.puzzle.printNumbers()
                 isSolved = self.puzzle.isSolved()
                 if isSolved == True:
-                    sys.exit(1)
+                    return 1
                 if subsets2Worked == True:
                     numChanges += 1
             if verbose == True:
@@ -288,7 +288,7 @@ class SudokuGame(object):
                 self.puzzle.printNumbers()
                 isSolved = self.puzzle.isSolved()
                 if isSolved == True:
-                    sys.exit(1)
+                    return 1
                 if subsets3Worked == True:
                     numChanges += 1
             if verbose == True:
@@ -301,7 +301,7 @@ class SudokuGame(object):
                 self.puzzle.printNumbers()
                 isSolved = self.puzzle.isSolved()
                 if isSolved == True:
-                    sys.exit(1)
+                    return 1
                 if subsets4Worked == True:
                     numChanges += 1            
             self.puzzle.printOptions()  
@@ -313,7 +313,7 @@ class SudokuGame(object):
                 self.puzzle.printNumbers()
                 isSolved = self.puzzle.isSolved()
                 if isSolved == True:
-                    sys.exit(1)   
+                    return 1
                 if subsets5Worked == True:
                     numChanges += 1         
             if verbose == True:
@@ -321,8 +321,6 @@ class SudokuGame(object):
             
             if numChanges == 0:
                 print("Puzzle cannot be solved")
-                sys.exit(1)
+                return -1
                 
                 
-game = SudokuGame("puzzle2.txt")
-game.runGame()
