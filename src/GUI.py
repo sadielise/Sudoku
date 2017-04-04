@@ -28,8 +28,9 @@ class SudokuGUI(object):
         self.GREY = (240,240,240)
         self.BLUE = (0,102,255)
         self.TITLE_FONT_SIZE = 55
-        self.NUM_FONT_SIZE = 45
+        self.NUM_FONT_SIZE = 40
         self.OPTIONS_FONT_SIZE = 12
+        self.STARTED = False
         
         
     def drawGrid(self, display):
@@ -65,9 +66,9 @@ class SudokuGUI(object):
                     display.blit(num, (x_loc_num, y_loc_num))
     
     def drawNextButton(self, display, game):
-        rect_x = self.START_X+(self.BOX_WIDTH * 3)-100
+        rect_x = self.START_X+175
         rect_y = 550
-        text_x = self.START_X+(self.BOX_WIDTH * 3)-92
+        text_x = self.START_X+187
         text_y = 558
         retVal = True
         mouse_pos = pygame.mouse.get_pos()
@@ -78,6 +79,40 @@ class SudokuGUI(object):
         pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,100,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("NEXT", False, self.BLACK)
+        display.blit(next, (text_x,text_y)) 
+        return retVal
+    
+    def drawStartButton(self, display):
+        rect_x = self.START_X
+        rect_y = 550
+        text_x = self.START_X+5
+        text_y = 558
+        retVal = False
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                retVal = True                
+        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,100,40))
+        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        next = nextFont.render("START", False, self.BLACK)
+        display.blit(next, (text_x,text_y)) 
+        return retVal
+    
+    def drawQuitButton(self, display):
+        rect_x = self.START_X+(self.BOX_WIDTH * 3)-100
+        rect_y = 550
+        text_x = self.START_X+(self.BOX_WIDTH * 3)-85
+        text_y = 558
+        retVal = True
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                retVal = False                
+        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,100,40))
+        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        next = nextFont.render("QUIT", False, self.BLACK)
         display.blit(next, (text_x,text_y)) 
         return retVal
 
@@ -100,7 +135,11 @@ class SudokuGUI(object):
                     sys.exit(1)
             display.fill(self.GREY)
             display.blit(title,(self.TITLE_X, self.TITLE_Y))
-            running = self.drawNextButton(display, game)
+            if self.STARTED == False:
+                self.STARTED = self.drawStartButton(display)
+            if self.STARTED == True:
+                running = self.drawNextButton(display, game)
+            running = self.drawQuitButton(display)
             self.drawGrid(display)
             self.drawNumbers(display, puzzle.getBooleans(), puzzle.getNumbers())
             pygame.display.update()
