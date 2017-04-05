@@ -12,7 +12,7 @@ class SudokuGUI(object):
         """Variable definitions"""
         self.RUNNING = True
         self.WINDOW_WIDTH = 510
-        self.WINDOW_HEIGHT = 625
+        self.WINDOW_HEIGHT = 700
         self.BOX_WIDTH = 150
         self.BOX_HEIGHT = 150
         self.CELL_WIDTH = 50
@@ -27,8 +27,11 @@ class SudokuGUI(object):
         self.WHITE = (255,255,255)
         self.GREY = (240,240,240)
         self.BLUE = (0,102,255)
+        self.GREEN = (32,170,34)
+        self.RED = (170,32,32)
         self.TITLE_FONT_SIZE = 55
         self.NUM_FONT_SIZE = 40
+        self.SOLVED_FONT_SIZE = 40
         self.OPTIONS_FONT_SIZE = 12
         self.STARTED = False
         
@@ -75,7 +78,7 @@ class SudokuGUI(object):
         click_pos = pygame.mouse.get_pressed()
         if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
-                retVal = game.solveOneChoice()                
+                retVal = game.solveOneChoice() 
         pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,100,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("NEXT", False, self.BLACK)
@@ -123,25 +126,35 @@ class SudokuGUI(object):
         
         pygame.init()
         pygame.font.init()
-        ft = pygame.font.SysFont('Calibri Light', self.TITLE_FONT_SIZE)
-        title = ft.render('Sudoku', False, self.BLACK)
+        ftTitle = pygame.font.SysFont('Calibri Light', self.TITLE_FONT_SIZE)
+        titleText = ftTitle.render('Sudoku', False, self.BLACK)
+        ftSolved = pygame.font.SysFont('Calibri Light', self.SOLVED_FONT_SIZE)
+        solvedText = ftSolved.render('Solved!', False, self.GREEN)
+        ftUnsolvable = pygame.font.SysFont('Calibri Light', self.SOLVED_FONT_SIZE)
+        unsolvableText = ftUnsolvable.render('Cannot be solved!', False, self.RED)
         display = pygame.display.set_mode([self.WINDOW_WIDTH, self.WINDOW_HEIGHT])
         pygame.display.set_caption("Python Sudoku")
         
         running = True
+        solveWorked = True
+        solved = False
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit(1)
             display.fill(self.GREY)
-            display.blit(title,(self.TITLE_X, self.TITLE_Y))
+            display.blit(titleText,(self.TITLE_X, self.TITLE_Y))
             if self.STARTED == False:
                 self.STARTED = self.drawStartButton(display)
-            if self.STARTED == True:
-                running = self.drawNextButton(display, game)
+            if self.STARTED == True and solved == False and solveWorked == True:
+                solveWorked = self.drawNextButton(display, game)
             running = self.drawQuitButton(display)
             self.drawGrid(display)
             self.drawNumbers(display, puzzle.getBooleans(), puzzle.getNumbers())
+            if puzzle.isSolved() == True:
+                display.blit(solvedText, (self.TITLE_X + 18, 610))
+            if puzzle.isSolved() == False and solveWorked == False:
+                display.blit(unsolvableText, (self.TITLE_X - 45, 610))
             pygame.display.update()
 
 gui = SudokuGUI()
