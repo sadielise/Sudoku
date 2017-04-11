@@ -2,8 +2,6 @@ import pygame, sys
 from pygame.locals import *
 from Puzzle import SudokuPuzzle
 from Game import SudokuGame
-import time
-import sys
 
 class SudokuGUI(object):
     
@@ -17,6 +15,8 @@ class SudokuGUI(object):
         self.BOX_HEIGHT = 150
         self.CELL_WIDTH = 50
         self.CELL_HEIGHT = 50
+        self.INNER_CELL_WIDTH = 48
+        self.INNER_CELL_HEIGHT = 48
         self.NUM_X = 18
         self.NUM_Y = 13
         self.TITLE_X = 185
@@ -29,6 +29,12 @@ class SudokuGUI(object):
         self.BLUE = (0,102,255)
         self.GREEN = (32,170,34)
         self.RED = (170,32,32)
+        self.LIGHT_YELLOW = (255,255,102)
+        self.LIGHT_ORANGE = (255,153,102)
+        self.LIGHT_PINK = (255,153,255)
+        self.LIGHT_BLUE = (153,204,255)
+        self.LIGHT_GREEN = (153,255,102)
+        self.LIGHT_PURPLE = (204,153,255)
         self.PURPLE = (153,51,153)
         self.TITLE_FONT_SIZE = 55
         self.NUM_FONT_SIZE = 40
@@ -56,6 +62,22 @@ class SudokuGUI(object):
                 x_loc_option = self.CELL_WIDTH * col + self.START_X + self.NUM_X - 10
                 y_loc_option = self.CELL_HEIGHT * row + self.START_Y + self.NUM_Y - 8
                 if booleans[row, col, 0] == 0 and self.OPTIONS_ON == True:
+                    totalOptions = 0
+                    index = 1
+                    for i in range (9):
+                        if booleans[row, col, index] == 1:
+                            totalOptions += 1
+                        index += 1
+                    if totalOptions == 1:
+                        pygame.draw.rect(display, self.LIGHT_BLUE, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                    elif totalOptions == 2:
+                        pygame.draw.rect(display, self.LIGHT_ORANGE, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                    elif totalOptions == 3:
+                        pygame.draw.rect(display, self.LIGHT_PINK, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                    elif totalOptions == 4:
+                        pygame.draw.rect(display, self.LIGHT_PURPLE, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                    elif totalOptions == 5:
+                        pygame.draw.rect(display, self.LIGHT_YELLOW, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
                     index = 1
                     for x in range(3):
                         temp_x_loc = x_loc_option
@@ -135,7 +157,7 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = game.solveOneChoice() 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        pygame.draw.rect(display, self.LIGHT_BLUE, (rect_x,rect_y,210,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("ONE CHOICE", False, self.BLACK)
         display.blit(next, (text_x,text_y)) 
@@ -152,7 +174,7 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = game.solveElimination() 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        pygame.draw.rect(display, self.LIGHT_GREEN, (rect_x,rect_y,210,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("ELIMINATION", False, self.BLACK)
         display.blit(next, (text_x,text_y)) 
@@ -169,7 +191,7 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = game.solveSubsets(2) 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        pygame.draw.rect(display, self.LIGHT_ORANGE, (rect_x,rect_y,210,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("SUBSETS 2", False, self.BLACK)
         display.blit(next, (text_x,text_y)) 
@@ -186,7 +208,7 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = game.solveSubsets(3) 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        pygame.draw.rect(display, self.LIGHT_PINK, (rect_x,rect_y,210,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("SUBSETS 3", False, self.BLACK)
         display.blit(next, (text_x,text_y)) 
@@ -203,7 +225,7 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = game.solveSubsets(4) 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        pygame.draw.rect(display, self.LIGHT_PURPLE, (rect_x,rect_y,210,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("SUBSETS 4", False, self.BLACK)
         display.blit(next, (text_x,text_y)) 
@@ -220,7 +242,7 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = game.solveSubsets(5) 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        pygame.draw.rect(display, self.LIGHT_YELLOW, (rect_x,rect_y,210,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("SUBSETS 5", False, self.BLACK)
         display.blit(next, (text_x,text_y)) 
@@ -251,10 +273,9 @@ class SudokuGUI(object):
                     sys.exit(1)
             display.fill(self.GREY)
             display.blit(titleText,(self.TITLE_X, self.TITLE_Y))
-            self.drawGrid(display)
             self.drawNumbers(display, puzzle.getBooleans(), puzzle.getNumbers())
+            self.drawGrid(display)
             self.drawOptionsButton(display)
-            pygame.display.update()
             if self.STARTED == False:
                 self.STARTED = self.drawStartButton(display)
             if self.STARTED == True and solved == False and solveWorked == True:
