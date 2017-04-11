@@ -11,8 +11,8 @@ class SudokuGUI(object):
         
         """Variable definitions"""
         self.RUNNING = True
-        self.WINDOW_WIDTH = 800
-        self.WINDOW_HEIGHT = 600
+        self.WINDOW_WIDTH = 730
+        self.WINDOW_HEIGHT = 560
         self.BOX_WIDTH = 150
         self.BOX_HEIGHT = 150
         self.CELL_WIDTH = 50
@@ -29,11 +29,13 @@ class SudokuGUI(object):
         self.BLUE = (0,102,255)
         self.GREEN = (32,170,34)
         self.RED = (170,32,32)
+        self.PURPLE = (153,51,153)
         self.TITLE_FONT_SIZE = 55
         self.NUM_FONT_SIZE = 40
         self.SOLVED_FONT_SIZE = 40
         self.OPTIONS_FONT_SIZE = 12
         self.STARTED = False
+        self.OPTIONS_ON = True
         
         
     def drawGrid(self, display):
@@ -53,7 +55,7 @@ class SudokuGUI(object):
                 y_loc_num = self.CELL_HEIGHT * row + self.START_Y + self.NUM_Y
                 x_loc_option = self.CELL_WIDTH * col + self.START_X + self.NUM_X - 10
                 y_loc_option = self.CELL_HEIGHT * row + self.START_Y + self.NUM_Y - 8
-                if booleans[row, col, 0] == 0:
+                if booleans[row, col, 0] == 0 and self.OPTIONS_ON == True:
                     index = 1
                     for x in range(3):
                         temp_x_loc = x_loc_option
@@ -65,111 +67,10 @@ class SudokuGUI(object):
                             index = index + 1
                         y_loc_option = y_loc_option + 15
                 else:
-                    num = numFont.render(str(numbers[row, col]), False, self.BLACK)
-                    display.blit(num, (x_loc_num, y_loc_num))
-    
-    def drawOneChoiceButton(self, display, game):
-        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + 50
-        text_x = self.START_X + (3 * self.BOX_WIDTH) + 30
-        text_y = self.START_Y + 58
-        retVal = True
-        mouse_pos = pygame.mouse.get_pos()
-        click_pos = pygame.mouse.get_pressed()
-        if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
-            if click_pos[0] == 1:
-                retVal = game.solveOneChoice() 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
-        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
-        next = nextFont.render("ONE CHOICE", False, self.BLACK)
-        display.blit(next, (text_x,text_y)) 
-        return retVal
-    
-    def drawEliminationButton(self, display, game):
-        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + 100
-        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + 108
-        retVal = True
-        mouse_pos = pygame.mouse.get_pos()
-        click_pos = pygame.mouse.get_pressed()
-        if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
-            if click_pos[0] == 1:
-                retVal = game.solveElimination() 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
-        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
-        next = nextFont.render("ELIMINATION", False, self.BLACK)
-        display.blit(next, (text_x,text_y)) 
-        return retVal
-    
-    def drawSubsets2Button(self, display, game):
-        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + 150
-        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + 158
-        retVal = True
-        mouse_pos = pygame.mouse.get_pos()
-        click_pos = pygame.mouse.get_pressed()
-        if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
-            if click_pos[0] == 1:
-                retVal = game.solveSubsets(2) 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
-        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
-        next = nextFont.render("SUBSETS 2", False, self.BLACK)
-        display.blit(next, (text_x,text_y)) 
-        return retVal
-    
-    def drawSubsets3Button(self, display, game):
-        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + 200
-        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + 208
-        retVal = True
-        mouse_pos = pygame.mouse.get_pos()
-        click_pos = pygame.mouse.get_pressed()
-        if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
-            if click_pos[0] == 1:
-                retVal = game.solveSubsets(3) 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
-        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
-        next = nextFont.render("SUBSETS 3", False, self.BLACK)
-        display.blit(next, (text_x,text_y)) 
-        return retVal
-    
-    def drawSubsets4Button(self, display, game):
-        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + 250
-        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + 258
-        retVal = True
-        mouse_pos = pygame.mouse.get_pos()
-        click_pos = pygame.mouse.get_pressed()
-        if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
-            if click_pos[0] == 1:
-                retVal = game.solveSubsets(4) 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
-        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
-        next = nextFont.render("SUBSETS 4", False, self.BLACK)
-        display.blit(next, (text_x,text_y)) 
-        return retVal
-    
-    def drawSubsets5Button(self, display, game):
-        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + 300
-        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + 308
-        retVal = True
-        mouse_pos = pygame.mouse.get_pos()
-        click_pos = pygame.mouse.get_pressed()
-        if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
-            if click_pos[0] == 1:
-                retVal = game.solveSubsets(5) 
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
-        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
-        next = nextFont.render("SUBSETS 5", False, self.BLACK)
-        display.blit(next, (text_x,text_y)) 
-        return retVal
-    
+                    if numbers[row, col] != 0:
+                        num = numFont.render(str(numbers[row, col]), False, self.BLACK)
+                        display.blit(num, (x_loc_num, y_loc_num))
+                        
     def drawStartButton(self, display):
         rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
         rect_y = self.START_Y
@@ -181,7 +82,7 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = True                
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,100,40))
+        pygame.draw.rect(display, self.PURPLE, (rect_x,rect_y,100,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("START", False, self.BLACK)
         display.blit(next, (text_x,text_y)) 
@@ -198,15 +99,136 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = False                
-        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,100,40))
+        pygame.draw.rect(display, self.PURPLE, (rect_x,rect_y,100,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         next = nextFont.render("QUIT", False, self.BLACK)
         display.blit(next, (text_x,text_y)) 
         return retVal
-
+                    
+    def drawOptionsButton(self, display):
+        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
+        rect_y = self.START_Y + 55
+        text_x = self.START_X + (3 * self.BOX_WIDTH) + 23
+        text_y = self.START_Y + 62
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                self.OPTIONS_ON = not self.OPTIONS_ON
+        pygame.draw.rect(display, self.PURPLE, (rect_x,rect_y,210,40))
+        optionsFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        if self.OPTIONS_ON == True:
+            options = optionsFont.render("OPTIONS OFF", False, self.BLACK)
+            display.blit(options, (text_x,text_y))
+        else:
+            options = optionsFont.render("OPTIONS ON", False, self.BLACK)
+            display.blit(options, (text_x,text_y))
+    
+    def drawOneChoiceButton(self, display, game):
+        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 315
+        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 308
+        retVal = True
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                retVal = game.solveOneChoice() 
+        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        next = nextFont.render("ONE CHOICE", False, self.BLACK)
+        display.blit(next, (text_x,text_y)) 
+        return retVal
+    
+    def drawEliminationButton(self, display, game):
+        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 260
+        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 253
+        retVal = True
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                retVal = game.solveElimination() 
+        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        next = nextFont.render("ELIMINATION", False, self.BLACK)
+        display.blit(next, (text_x,text_y)) 
+        return retVal
+    
+    def drawSubsets2Button(self, display, game):
+        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 205
+        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 198
+        retVal = True
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                retVal = game.solveSubsets(2) 
+        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        next = nextFont.render("SUBSETS 2", False, self.BLACK)
+        display.blit(next, (text_x,text_y)) 
+        return retVal
+    
+    def drawSubsets3Button(self, display, game):
+        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 150
+        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 143
+        retVal = True
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                retVal = game.solveSubsets(3) 
+        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        next = nextFont.render("SUBSETS 3", False, self.BLACK)
+        display.blit(next, (text_x,text_y)) 
+        return retVal
+    
+    def drawSubsets4Button(self, display, game):
+        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 95
+        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 88
+        retVal = True
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                retVal = game.solveSubsets(4) 
+        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        next = nextFont.render("SUBSETS 4", False, self.BLACK)
+        display.blit(next, (text_x,text_y)) 
+        return retVal
+    
+    def drawSubsets5Button(self, display, game):
+        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 40
+        text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 33
+        retVal = True
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                retVal = game.solveSubsets(5) 
+        pygame.draw.rect(display, self.BLUE, (rect_x,rect_y,210,40))
+        nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        next = nextFont.render("SUBSETS 5", False, self.BLACK)
+        display.blit(next, (text_x,text_y)) 
+        return retVal
+    
     def runGUI(self):
         
-        puzzle = SudokuPuzzle('puzzle49.txt')
+        puzzle = SudokuPuzzle('puzzle27.txt')
         game = SudokuGame(puzzle)
         
         pygame.init()
@@ -229,6 +251,10 @@ class SudokuGUI(object):
                     sys.exit(1)
             display.fill(self.GREY)
             display.blit(titleText,(self.TITLE_X, self.TITLE_Y))
+            self.drawGrid(display)
+            self.drawNumbers(display, puzzle.getBooleans(), puzzle.getNumbers())
+            self.drawOptionsButton(display)
+            pygame.display.update()
             if self.STARTED == False:
                 self.STARTED = self.drawStartButton(display)
             if self.STARTED == True and solved == False and solveWorked == True:
@@ -240,12 +266,10 @@ class SudokuGUI(object):
                 subsets5 = self.drawSubsets5Button(display, game)
                 solveWorked = onechoice or elimination or subsets2 or subsets3 or subsets4 or subsets5
             running = self.drawQuitButton(display)
-            self.drawGrid(display)
-            self.drawNumbers(display, puzzle.getBooleans(), puzzle.getNumbers())
             if puzzle.isSolved() == True:
-                display.blit(solvedText, (self.START_X + (3 * self.BOX_WIDTH) + 15, 450))
+                display.blit(solvedText, (self.START_X + (3 * self.BOX_WIDTH) + 60,self.TITLE_Y))
             if puzzle.isSolved() == False and solveWorked == False:
-                display.blit(unsolvableText, (self.START_X + (3 * self.BOX_WIDTH) + 15, 450))
+                display.blit(unsolvableText, (self.START_X + (3 * self.BOX_WIDTH) + 15, self.TITLE_Y))
             pygame.display.update()
 
 gui = SudokuGUI()
