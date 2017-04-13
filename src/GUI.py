@@ -42,6 +42,7 @@ class SudokuGUI(object):
         self.OPTIONS_FONT_SIZE = 12
         self.STARTED = False
         self.OPTIONS_ON = True
+        self.HINTS_ON = True
         
         
     def drawGrid(self, display):
@@ -61,7 +62,7 @@ class SudokuGUI(object):
                 y_loc_num = self.CELL_HEIGHT * row + self.START_Y + self.NUM_Y
                 x_loc_option = self.CELL_WIDTH * col + self.START_X + self.NUM_X - 10
                 y_loc_option = self.CELL_HEIGHT * row + self.START_Y + self.NUM_Y - 8
-                if booleans[row, col, 0] == 0 and self.OPTIONS_ON == True:
+                if booleans[row, col, 0] == 0 and self.HINTS_ON == True:
                     totalOptions = 0
                     index = 1
                     for i in range (9):
@@ -78,6 +79,7 @@ class SudokuGUI(object):
                         pygame.draw.rect(display, self.LIGHT_PURPLE, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
                     elif totalOptions == 5:
                         pygame.draw.rect(display, self.LIGHT_YELLOW, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                if booleans[row, col, 0] == 0 and self.OPTIONS_ON == True:
                     index = 1
                     for x in range(3):
                         temp_x_loc = x_loc_option
@@ -86,7 +88,7 @@ class SudokuGUI(object):
                                 option = optionFont.render(str(index), False, self.BLACK)
                                 display.blit(option, (temp_x_loc, y_loc_option))
                             temp_x_loc = temp_x_loc + 15
-                            index = index + 1
+                            index += 1
                         y_loc_option = y_loc_option + 15
                 else:
                     if numbers[row, col] != 0:
@@ -104,9 +106,9 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = True                
-        pygame.draw.rect(display, self.PURPLE, (rect_x,rect_y,100,40))
+        pygame.draw.rect(display, self.BLACK, (rect_x,rect_y,100,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
-        next = nextFont.render("START", False, self.BLACK)
+        next = nextFont.render("START", False, self.WHITE)
         display.blit(next, (text_x,text_y)) 
         return retVal
     
@@ -121,36 +123,55 @@ class SudokuGUI(object):
         if rect_x < mouse_pos[0] < rect_x + 100 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 retVal = False                
-        pygame.draw.rect(display, self.PURPLE, (rect_x,rect_y,100,40))
+        pygame.draw.rect(display, self.BLACK, (rect_x,rect_y,100,40))
         nextFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
-        next = nextFont.render("QUIT", False, self.BLACK)
+        next = nextFont.render("QUIT", False, self.WHITE)
         display.blit(next, (text_x,text_y)) 
         return retVal
                     
     def drawOptionsButton(self, display):
         rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + 55
+        rect_y = self.START_Y + 50
         text_x = self.START_X + (3 * self.BOX_WIDTH) + 23
-        text_y = self.START_Y + 62
+        text_y = self.START_Y + 57
         mouse_pos = pygame.mouse.get_pos()
         click_pos = pygame.mouse.get_pressed()
         if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
             if click_pos[0] == 1:
                 self.OPTIONS_ON = not self.OPTIONS_ON
-        pygame.draw.rect(display, self.PURPLE, (rect_x,rect_y,210,40))
+        pygame.draw.rect(display, self.BLACK, (rect_x,rect_y,210,40))
         optionsFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
         if self.OPTIONS_ON == True:
-            options = optionsFont.render("OPTIONS OFF", False, self.BLACK)
+            options = optionsFont.render("OPTIONS OFF", False, self.WHITE)
             display.blit(options, (text_x,text_y))
         else:
-            options = optionsFont.render("OPTIONS ON", False, self.BLACK)
+            options = optionsFont.render("OPTIONS ON", False, self.WHITE)
+            display.blit(options, (text_x,text_y))
+            
+    def drawHintsButton(self, display):
+        rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
+        rect_y = self.START_Y + 100
+        text_x = self.START_X + (3 * self.BOX_WIDTH) + 45
+        text_y = self.START_Y + 107
+        mouse_pos = pygame.mouse.get_pos()
+        click_pos = pygame.mouse.get_pressed()
+        if rect_x < mouse_pos[0] < rect_x + 210 and rect_y < mouse_pos[1] < rect_y + 40:
+            if click_pos[0] == 1:
+                self.HINTS_ON = not self.HINTS_ON
+        pygame.draw.rect(display, self.BLACK, (rect_x,rect_y,210,40))
+        optionsFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
+        if self.HINTS_ON == True:
+            options = optionsFont.render("HINTS OFF", False, self.WHITE)
+            display.blit(options, (text_x,text_y))
+        else:
+            options = optionsFont.render("HINTS ON", False, self.WHITE)
             display.blit(options, (text_x,text_y))
     
     def drawOneChoiceButton(self, display, game):
         rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 315
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 290
         text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 308
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 283
         retVal = True
         mouse_pos = pygame.mouse.get_pos()
         click_pos = pygame.mouse.get_pressed()
@@ -165,9 +186,9 @@ class SudokuGUI(object):
     
     def drawEliminationButton(self, display, game):
         rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 260
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 240
         text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 253
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 233
         retVal = True
         mouse_pos = pygame.mouse.get_pos()
         click_pos = pygame.mouse.get_pressed()
@@ -182,9 +203,9 @@ class SudokuGUI(object):
     
     def drawSubsets2Button(self, display, game):
         rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 205
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 190
         text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 198
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 183
         retVal = True
         mouse_pos = pygame.mouse.get_pos()
         click_pos = pygame.mouse.get_pressed()
@@ -199,9 +220,9 @@ class SudokuGUI(object):
     
     def drawSubsets3Button(self, display, game):
         rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 150
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 140
         text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 143
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 133
         retVal = True
         mouse_pos = pygame.mouse.get_pos()
         click_pos = pygame.mouse.get_pressed()
@@ -216,9 +237,9 @@ class SudokuGUI(object):
     
     def drawSubsets4Button(self, display, game):
         rect_x = self.START_X + (3 * self.BOX_WIDTH) + 15
-        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 95
+        rect_y = self.START_Y + (3 * self.BOX_WIDTH) - 90
         text_x = self.START_X + (3 * self.BOX_WIDTH) + 28
-        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 88
+        text_y = self.START_Y + (3 * self.BOX_WIDTH) - 83
         retVal = True
         mouse_pos = pygame.mouse.get_pos()
         click_pos = pygame.mouse.get_pressed()
@@ -276,6 +297,7 @@ class SudokuGUI(object):
             self.drawNumbers(display, puzzle.getBooleans(), puzzle.getNumbers())
             self.drawGrid(display)
             self.drawOptionsButton(display)
+            self.drawHintsButton(display)
             if self.STARTED == False:
                 self.STARTED = self.drawStartButton(display)
             if self.STARTED == True and solved == False and solveWorked == True:
