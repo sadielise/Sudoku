@@ -53,7 +53,88 @@ class SudokuGUI(object):
             for col in range(9):
                 pygame.draw.rect(display, self.BLACK, [self.CELL_WIDTH * col + self.START_X, self.CELL_HEIGHT * row + self.START_Y, self.CELL_WIDTH, self.CELL_HEIGHT], 1)
      
+    def drawHints(self, display, game, booleans):
+        
+        if self.HINTS_ON == True:
+            for row in range(9):
+                for col in range(9):
+                    if booleans[row, col, 0] == 0:
+                        totalOptions = 0
+                        index = 1
+                        for i in range(9):
+                            if booleans[row, col, index] == 1:
+                                totalOptions += 1
+                            index += 1
+                        if totalOptions == 1:
+                            pygame.draw.rect(display, self.LIGHT_BLUE, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+            
+            for subsets in range(9):
+                subsetsRow2 = game.findRowSubsetsNotMatching(2, subsets)
+                if len(subsetsRow2) != 0:
+                    for cell in subsetsRow2:
+                        pygame.draw.rect(display, self.LIGHT_ORANGE, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                subsetsCol2 = game.findColSubsetsNotMatching(2, subsets)
+                if len(subsetsCol2) != 0:
+                    for cell in subsetsCol2:
+                        pygame.draw.rect(display, self.LIGHT_ORANGE, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                
+                subsetsRow3 = game.findRowSubsetsNotMatching(3, subsets)
+                if len(subsetsRow3) != 0:
+                    for cell in subsetsRow3:
+                        pygame.draw.rect(display, self.LIGHT_PINK, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                subsetsCol3 = game.findColSubsetsNotMatching(3, subsets)
+                if len(subsetsCol3) != 0:
+                    for cell in subsetsCol3:
+                        pygame.draw.rect(display, self.LIGHT_PINK, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                
+                subsetsRow4 = game.findRowSubsetsNotMatching(4, subsets)
+                if len(subsetsRow4) != 0:
+                    for cell in subsetsRow4:
+                        pygame.draw.rect(display, self.LIGHT_PURPLE, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                subsetsCol4 = game.findColSubsetsNotMatching(4, subsets)
+                if len(subsetsCol4) != 0:
+                    for cell in subsetsCol4:
+                        pygame.draw.rect(display, self.LIGHT_PURPLE, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                
+                subsetsRow5 = game.findRowSubsetsNotMatching(5, subsets)
+                if len(subsetsRow5) != 0:
+                    for cell in subsetsRow5:
+                        pygame.draw.rect(display, self.LIGHT_YELLOW, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                subsetsCol5 = game.findColSubsetsNotMatching(5, subsets)
+                if len(subsetsCol5) != 0:
+                    for cell in subsetsCol5:
+                        pygame.draw.rect(display, self.LIGHT_YELLOW, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                
+            boxRow = 0
+            boxCol = 0
+            for i in range(3):
+                for j in range(3):
+                    subsetsBox2 = game.findBoxSubsetsNotMatching(2, boxRow, boxCol)
+                    if len(subsetsBox2) != 0:
+                        for cell in subsetsBox2:
+                            pygame.draw.rect(display, self.LIGHT_ORANGE, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                   
+                    subsetsBox3 = game.findBoxSubsetsNotMatching(3, boxRow, boxCol)
+                    if len(subsetsBox3) != 0:
+                        for cell in subsetsBox3:
+                            pygame.draw.rect(display, self.LIGHT_PINK, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                    
+                    subsetsBox4 = game.findBoxSubsetsNotMatching(4, boxRow, boxCol)
+                    if len(subsetsBox4) != 0:
+                        for cell in subsetsBox4:
+                            pygame.draw.rect(display, self.LIGHT_PURPLE, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                    
+                    subsetsBox5 = game.findBoxSubsetsNotMatching(5, boxRow, boxCol)
+                    if len(subsetsBox5) != 0:
+                        for cell in subsetsBox5:
+                            pygame.draw.rect(display, self.LIGHT_YELLOW, [self.CELL_WIDTH * int(cell[1]) + self.START_X + 1, self.CELL_HEIGHT * int(cell[0]) + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
+                    
+                    boxRow += 3
+                boxCol += 3
+                        
+                        
     def drawNumbers(self, display, booleans, numbers):
+        
         for row in range(9):
             for col in range(9):
                 numFont = pygame.font.SysFont('Calibri Light', self.NUM_FONT_SIZE)
@@ -62,23 +143,6 @@ class SudokuGUI(object):
                 y_loc_num = self.CELL_HEIGHT * row + self.START_Y + self.NUM_Y
                 x_loc_option = self.CELL_WIDTH * col + self.START_X + self.NUM_X - 10
                 y_loc_option = self.CELL_HEIGHT * row + self.START_Y + self.NUM_Y - 8
-                if booleans[row, col, 0] == 0 and self.HINTS_ON == True:
-                    totalOptions = 0
-                    index = 1
-                    for i in range (9):
-                        if booleans[row, col, index] == 1:
-                            totalOptions += 1
-                        index += 1
-                    if totalOptions == 1:
-                        pygame.draw.rect(display, self.LIGHT_BLUE, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
-                    elif totalOptions == 2:
-                        pygame.draw.rect(display, self.LIGHT_ORANGE, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
-                    elif totalOptions == 3:
-                        pygame.draw.rect(display, self.LIGHT_PINK, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
-                    elif totalOptions == 4:
-                        pygame.draw.rect(display, self.LIGHT_PURPLE, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
-                    elif totalOptions == 5:
-                        pygame.draw.rect(display, self.LIGHT_YELLOW, [self.CELL_WIDTH * col + self.START_X + 1, self.CELL_HEIGHT * row + self.START_Y + 1, self.INNER_CELL_WIDTH, self.INNER_CELL_HEIGHT])
                 if booleans[row, col, 0] == 0 and self.OPTIONS_ON == True:
                     index = 1
                     for x in range(3):
@@ -294,6 +358,7 @@ class SudokuGUI(object):
                     sys.exit(1)
             display.fill(self.GREY)
             display.blit(titleText,(self.TITLE_X, self.TITLE_Y))
+            self.drawHints(display, game, puzzle.getBooleans())
             self.drawNumbers(display, puzzle.getBooleans(), puzzle.getNumbers())
             self.drawGrid(display)
             self.drawOptionsButton(display)
