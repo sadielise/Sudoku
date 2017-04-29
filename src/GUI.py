@@ -335,7 +335,7 @@ class SudokuGUI(object):
     
     def runGUI(self):
         
-        puzzle = SudokuPuzzle('puzzle27.txt')
+        puzzle = SudokuPuzzle('puzzle38.txt')
         game = SudokuGame(puzzle)
         
         pygame.init()
